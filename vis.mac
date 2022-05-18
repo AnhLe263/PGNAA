@@ -27,17 +27,24 @@
 # Draw geometry:
 /vis/drawVolume
 #
-# Specify view angle:
-/vis/viewer/set/viewpointThetaPhi 90. 0.
+# To get nice view
+# Make the "World" box invisible
+#/vis/geometry/set/visibility World 0 false
+# "Envelope" is transparent blue to represent water
+#/vis/geometry/set/colour Envelope 0 0 0 1 .3
+/vis/viewer/set/style surface
+/vis/viewer/set/hiddenMarker true
+/vis/viewer/set/viewpointThetaPhi 120 150
 #
 # Specify zoom value:
 #/vis/viewer/zoom 2.
 #
 # Specify style (surface or wireframe):
-#/vis/viewer/set/style wireframe
+#/vis/viewer/set/style surface
 #
 # Draw coordinate axes:
-#/vis/scene/add/axes 0 0 0 1 m
+#/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
+/vis/scene/add/axes 0 0 0 1 m
 #
 # Draw smooth trajectories at end of event, showing trajectory points
 # as markers 2 pixels wide:
