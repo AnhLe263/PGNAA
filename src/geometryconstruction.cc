@@ -1,7 +1,7 @@
 
 //---------------------------------------------------------------------//
 // Created by L.T. Anh                                                 //
-// Contribution: L.T. Anh, D.M. Linh                                            //
+// Contribution: L.T. Anh, D.M. Linh                                   //
 //---------------------------------------------------------------------//
 #include "geometryconstruction.hh"
 #include "G4VPhysicalVolume.hh"
@@ -16,6 +16,8 @@
 #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Tubs.hh"
+#include "G4RotationMatrix.hh"
+#include "G4Box.hh"
 geometryconstruction::geometryconstruction()
 : G4VUserDetectorConstruction(), fUsingNewGeometry(false)
 {
@@ -52,11 +54,11 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4double outterRadiusPb = 72.0*cm / 2.;
     G4double outterHeightPb = 67*cm + 2*cm + 2.*cm;
     // The World
-    G4double outterRadiusWorld = outterRadiusPb*1.2;
+    //G4double outterRadiusWorld = outterRadiusPb*1.2;
     G4double outterHeightWorld = outterHeightPb*1.2;
-    G4Tubs *worldSolid = new G4Tubs("World",0,outterRadiusWorld,outterHeightWorld*0.5,0.*deg,360*deg);
+    G4Box *worldSolid = new G4Box("World",outterHeightWorld*0.5,outterHeightWorld*0.5,outterHeightWorld*0.5);
     G4LogicalVolume *worldLogic = new G4LogicalVolume(worldSolid,matAir,"World");
-    G4VPhysicalVolume* worldPhys = new G4PVPlacement(0,G4ThreeVector(),"world",worldLogic,0,false,0,true);
+    G4VPhysicalVolume* worldPhys = new G4PVPlacement(0,G4ThreeVector(),"World",worldLogic,0,false,0,true);
 
     return worldPhys;
 }
