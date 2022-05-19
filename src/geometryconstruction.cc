@@ -18,6 +18,7 @@
 #include "G4Tubs.hh"
 #include "G4RotationMatrix.hh"
 #include "G4Box.hh"
+#include "G4UnionSolid.hh"
 geometryconstruction::geometryconstruction()
 : G4VUserDetectorConstruction(), fUsingNewGeometry(false)
 {
@@ -50,9 +51,18 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4Material *matBGO = nist->FindOrBuildMaterial("BGO");
 
     //Some size
+    G4double outterRadiusDetHole = 7.6*cm/2; 
+    G4double heighSample = 25.0*cm;
+    G4double outterRadiusSample = 33.*cm/2.;
+    G4double innerRadiusSample = outterRadiusDetHole;
+    G4double outterRadiusParafin = outterRadiusSample+ 15.*cm;
+    G4double innerRadiusParafin1 = outterRadiusDetHole;
+    G4double heighParafin1 = 10*cm + 25*cm;
+    
+    G4double heighParafin2 = 7*cm + 12*cm + 3*cm +6*cm;
     //Hinh tru Pb:
-    G4double outterRadiusPb = 33.0*cm / 2. + 15.0*cm + 3.*cm;
-    G4double outterHeightPb = 67*cm + 2*cm + 2.*cm;
+    G4double outterRadiusPb = outterRadiusParafin+3*cm;;
+    G4double outterHeightPb = 67*cm;
     // The World
     //G4double outterRadiusWorld = outterRadiusPb*1.2;
     G4double outterHeightWorld = outterHeightPb*1.2;
@@ -71,18 +81,20 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     /*---------------------------parafin------------------------------------------------------------------------------*/
     // Chia phần parafin thành 2 phần nhỏ để implement cho dễ: Phần 1 chưa det và mẫu; Phần 2 chứa nguồn, graphite
     //Phần parafin thứ nhất:
-    G4double outterRadiusParafin = outterRadiusPb - 3*cm;
-    G4double innerRadiusParafin1 = 7.6*cm/2.;
-    G4double heighParafin1 = 10*cm + 25*cm;
+    
     G4Tubs* parafin1Solid = new G4Tubs("Parafin1",innerRadiusParafin1,outterRadiusParafin,heighParafin1*0.5,0*deg,tubPhi);
-    G4LogicalVolume* parafin1Logic = new G4LogicalVolume(parafin1Solid,matParafin,"Parafin1");
+    G4Tubs* parafin2Solid = new G4Tubs("Parafin2",0,outterRadiusParafin,heighParafin2*0.5,0*deg,tubPhi);
+    G4double zTran = heighParafin1/2.0 + heighParafin2/2.;
+    G4ThreeVector zTranV(0,0,-zTran);
+    G4UnionSolid* parafinSolid = new G4UnionSolid("Parafin",parafin1Solid,parafin2Solid,0,zTranV);
+    G4LogicalVolume* parafin1Logic = new G4LogicalVolume(parafinSolid,matParafin,"Parafin");
     posX = 0*cm;
     posY = 0.*cm;
     posZ = outterHeightPb/2. - 2.*cm - heighParafin1/2.0;
     G4VPhysicalVolume* parafin1Phys =  new G4PVPlacement(
         0,
         G4ThreeVector(posX,posY,posZ),
-        "Parafin1",
+        "Parafin",
         parafin1Logic,
         leadPhys,//mother
         false,
@@ -91,9 +103,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     );
     // Sample
     G4Material *matSample = nist->FindOrBuildMaterial("CoalM4");
-    G4double heighSample = 25.0*cm;
-    G4double outterRadiusSample = 33.*cm/2.;
-    G4double innerRadiusSample = innerRadiusParafin1;
+    
     G4Tubs *sampleSolid = new G4Tubs("Sample",innerRadiusSample,outterRadiusSample,heighSample*0.5,0*deg,tubPhi);
     G4LogicalVolume *sampleLogic = new G4LogicalVolume(sampleSolid,matSample,"Sample");
     posX = 0*cm;
@@ -109,6 +119,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         0,
         true
     );
+
     /*---------------------------0000------------------------------------------------------------------------------*/
     return worldPhys;
 }

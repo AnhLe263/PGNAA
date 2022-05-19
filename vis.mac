@@ -32,6 +32,10 @@
 /vis/geometry/set/visibility World 0 false
 # "Lead" is transparent blue to represent black
 /vis/geometry/set/colour Lead 0 0 0 0 0.5
+/vis/geometry/set/colour Parafin 1 0 1 0 0.2
+
+/vis/geometry/set/colour Sample 0 0 0 1 1
+
 /vis/viewer/set/background white
 #/vis/set/colour 0 0 0 0
 /vis/viewer/set/style surface
@@ -46,7 +50,7 @@
 #
 # Draw coordinate axes:
 #/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
-/vis/scene/add/axes 0 0 0 1 m
+/vis/scene/add/axes 0 0 0 0.36 m
 #
 # Draw smooth trajectories at end of event, showing trajectory points
 # as markers 2 pixels wide:
