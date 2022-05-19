@@ -59,7 +59,9 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4double innerRadiusParafin1 = outterRadiusDetHole;
     G4double heighParafin1 = 10*cm + 25*cm;
     
-    G4double heighParafin2 = 7*cm + 12*cm + 3*cm +6*cm;
+    G4double sourceCfThickness = 3.*cm;
+    G4double sourceRadius = 2*cm;// Can hoi lai Chu Tuy
+    G4double heighParafin2 = 7*cm + 12*cm + sourceCfThickness +6*cm;
     //Hinh tru Pb:
     G4double outterRadiusPb = outterRadiusParafin+3*cm;;
     G4double outterHeightPb = 67*cm;
@@ -87,15 +89,15 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4double zTran = heighParafin1/2.0 + heighParafin2/2.;
     G4ThreeVector zTranV(0,0,-zTran);
     G4UnionSolid* parafinSolid = new G4UnionSolid("Parafin",parafin1Solid,parafin2Solid,0,zTranV);
-    G4LogicalVolume* parafin1Logic = new G4LogicalVolume(parafinSolid,matParafin,"Parafin");
+    G4LogicalVolume* parafinLogic = new G4LogicalVolume(parafinSolid,matParafin,"Parafin");
     posX = 0*cm;
     posY = 0.*cm;
     posZ = outterHeightPb/2. - 2.*cm - heighParafin1/2.0;
-    G4VPhysicalVolume* parafin1Phys =  new G4PVPlacement(
+    G4VPhysicalVolume* parafinPhys =  new G4PVPlacement(
         0,
         G4ThreeVector(posX,posY,posZ),
         "Parafin",
-        parafin1Logic,
+        parafinLogic,
         leadPhys,//mother
         false,
         0,
@@ -114,12 +116,46 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         G4ThreeVector(posX,posY,posZ),
         "Sample",
         sampleLogic,
-        parafin1Phys,//Mother
+        parafinPhys,//Mother
         false,
         0,
         true
     );
 
+    /*---------------------------0000------------------------------------------------------------------------------*/
+    // The vung khong gian nguon
+    G4Tubs *sourceRegionSolid = new G4Tubs("SourceRegion",0,outterRadiusSample,sourceCfThickness*0.5,0,tubPhi);
+    G4LogicalVolume *sourceRegionLogic = new G4LogicalVolume(sourceRegionSolid,matAir,"SourceRegion");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = heighParafin1/2. - 10.*cm - heighSample - 6.0*cm - sourceCfThickness/2.;
+    G4VPhysicalVolume* sourceRegionPhys = new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "SourceRegion",
+        sourceRegionLogic,
+        parafinPhys,//Mother
+        false,
+        0,
+        true
+    );
+    // The tinh nguon
+    G4Material* matCf = nist->FindOrBuildMaterial("G4_Cf");
+    G4Tubs *sourceSolid = new G4Tubs("Source",0,sourceRadius,sourceCfThickness*0.5,0,tubPhi);
+    G4LogicalVolume *sourceLogic = new G4LogicalVolume(sourceSolid,matCf,"Source");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = 0;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "Source",
+        sourceLogic,
+        sourceRegionPhys,//Mother
+        false,
+        0,
+        true
+    );
     /*---------------------------0000------------------------------------------------------------------------------*/
     return worldPhys;
 }
