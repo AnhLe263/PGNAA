@@ -51,7 +51,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
 
     //Some size
     //Hinh tru Pb:
-    G4double outterRadiusPb = 72.0*cm / 2.;
+    G4double outterRadiusPb = 33.0*cm / 2. + 15.0*cm + 3.*cm;
     G4double outterHeightPb = 67*cm + 2*cm + 2.*cm;
     // The World
     //G4double outterRadiusWorld = outterRadiusPb*1.2;
@@ -71,25 +71,44 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     /*---------------------------parafin------------------------------------------------------------------------------*/
     // Chia phần parafin thành 2 phần nhỏ để implement cho dễ: Phần 1 chưa det và mẫu; Phần 2 chứa nguồn, graphite
     //Phần parafin thứ nhất:
-    G4double outterRadiusParafin = 33.*cm/2.0 + 15*cm;
+    G4double outterRadiusParafin = outterRadiusPb - 3*cm;
     G4double innerRadiusParafin1 = 7.6*cm/2.;
     G4double heighParafin1 = 10*cm + 25*cm;
     G4Tubs* parafin1Solid = new G4Tubs("Parafin1",innerRadiusParafin1,outterRadiusParafin,heighParafin1*0.5,0*deg,tubPhi);
-    G4LogicalVolume* parafin1Logic = new G4LogicalVolume(parafin1Solid,matParafin,"Parafin");
+    G4LogicalVolume* parafin1Logic = new G4LogicalVolume(parafin1Solid,matParafin,"Parafin1");
     posX = 0*cm;
     posY = 0.*cm;
     posZ = outterHeightPb/2. - 2.*cm - heighParafin1/2.0;
-    new G4PVPlacement(
+    G4VPhysicalVolume* parafin1Phys =  new G4PVPlacement(
         0,
         G4ThreeVector(posX,posY,posZ),
-        "Parafin",
+        "Parafin1",
         parafin1Logic,
         leadPhys,//mother
         false,
         0,
         true
     );
-
+    // Sample
+    G4Material *matSample = nist->FindOrBuildMaterial("CoalM4");
+    G4double heighSample = 25.0*cm;
+    G4double outterRadiusSample = 33.*cm/2.;
+    G4double innerRadiusSample = innerRadiusParafin1;
+    G4Tubs *sampleSolid = new G4Tubs("Sample",innerRadiusSample,outterRadiusSample,heighSample*0.5,0*deg,tubPhi);
+    G4LogicalVolume *sampleLogic = new G4LogicalVolume(sampleSolid,matSample,"Sample");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = heighParafin1/2. - 10.*cm - heighSample/2.0;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "Sample",
+        sampleLogic,
+        parafin1Phys,//Mother
+        false,
+        0,
+        true
+    );
     /*---------------------------0000------------------------------------------------------------------------------*/
     return worldPhys;
 }
@@ -140,10 +159,11 @@ void geometryconstruction::DefineMaterials()
 
     //new G4Material("Lead", z=82., a=207.19*g/mole, density= 11.35*g/cm3);
     //---------Mau chuan M4 ---------------------------------------------------
+    
     auto nist = G4NistManager::Instance();
     G4Material* matC = nist->FindOrBuildMaterial("G4_C");
     G4Material* matSiO2 = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
-    G4Material* matAl2O3 = nist->FindOrBuildMaterial("G4_ALUMINUM_OXIDE ");
+    G4Material* matAl2O3 = nist->FindOrBuildMaterial("G4_ALUMINUM_OXIDE");
     G4Material* matFe2O3 = new G4Material("Fe2O3", density= 5.24*g/cm3, ncomponents=2);
     matFe2O3->AddElement(O , natoms=3);
     matFe2O3->AddElement(Fe, natoms= 2);
@@ -165,7 +185,7 @@ void geometryconstruction::DefineMaterials()
     G4Material* matP2O5 = new G4Material("P2O5", density= 2.39*g/cm3, ncomponents=2);
     matP2O5->AddElement(O , natoms=5);
     matP2O5->AddElement(P, natoms= 2);  
-
+    
     G4Material* matCoalM4 = new G4Material("CoalM4",density = 1.2*g/cm3,ncomponents=10);
     matCoalM4->AddMaterial(matC,    fractionmass=76.89*perCent);
     matCoalM4->AddMaterial(matSiO2, fractionmass=12.9*perCent);
@@ -177,6 +197,6 @@ void geometryconstruction::DefineMaterials()
     matCoalM4->AddMaterial(matCaO,  fractionmass=0.22*perCent);
     matCoalM4->AddMaterial(matMgO,  fractionmass=0.4*perCent);
     matCoalM4->AddMaterial(matP2O5, fractionmass=0.07*perCent);
-
+    
 
 }
