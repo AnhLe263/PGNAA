@@ -89,7 +89,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         0,
         true
     );
-    
+
     /*---------------------------0000------------------------------------------------------------------------------*/
     return worldPhys;
 }
@@ -116,6 +116,13 @@ void geometryconstruction::DefineMaterials()
     G4Element* O  = new G4Element("Oxygen"   ,"O" , z= 8., a=  16.00*g/mole);
     G4Element* Ge = new G4Element("Germanium","Ge", z=32., a=  72.59*g/mole);
     G4Element* Bi = new G4Element("Bismuth"  ,"Bi", z=83., a= 208.98*g/mole);
+    G4Element* Fe = new G4Element("Iron"  ,"Fe", z=26., a= 55.845*g/mole);
+    G4Element* Ti = new G4Element("Titanium"  ,"Ti", z=22., a= 47.867*g/mole);
+    G4Element* K = new G4Element("Potassium"  ,"K", z=19., a= 39.0983*g/mole);
+    G4Element* Na = new G4Element("Sodium"  ,"Na", z=11., a= 22.989769*g/mole);
+    G4Element* Ca = new G4Element("Calcium"  ,"Ca", z=20., a= 40.078*g/mole);
+    G4Element* Mg = new G4Element("Magnesium"  ,"Mg", z=12., a= 24.304*g/mole);
+    G4Element* P = new G4Element("Phosphorus"  ,"P", z=15., a= 30.973*g/mole);
     // define materials
     //
     G4double density;
@@ -132,4 +139,44 @@ void geometryconstruction::DefineMaterials()
     BGO->AddElement(Bi, natoms= 4);
 
     //new G4Material("Lead", z=82., a=207.19*g/mole, density= 11.35*g/cm3);
+    //---------Mau chuan M4 ---------------------------------------------------
+    auto nist = G4NistManager::Instance();
+    G4Material* matC = nist->FindOrBuildMaterial("G4_C");
+    G4Material* matSiO2 = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
+    G4Material* matAl2O3 = nist->FindOrBuildMaterial("G4_ALUMINUM_OXIDE ");
+    G4Material* matFe2O3 = new G4Material("Fe2O3", density= 5.24*g/cm3, ncomponents=2);
+    matFe2O3->AddElement(O , natoms=3);
+    matFe2O3->AddElement(Fe, natoms= 2);
+    G4Material* matTiO2 = new G4Material("TiO2", density= 4.23*g/cm3, ncomponents=2);
+    matTiO2->AddElement(O , natoms=2);
+    matTiO2->AddElement(Ti, natoms= 1);
+    G4Material* matK2O = new G4Material("K2O", density= 2.32*g/cm3, ncomponents=2);
+    matK2O->AddElement(O , natoms=1);
+    matK2O->AddElement(K, natoms= 2);
+    G4Material* matNa2O = new G4Material("Na2O", density= 2.27*g/cm3, ncomponents=2);
+    matNa2O->AddElement(O , natoms=1);
+    matNa2O->AddElement(Na, natoms= 2);   
+    G4Material* matCaO = new G4Material("CaO", density= 3.34*g/cm3, ncomponents=2);
+    matCaO->AddElement(O , natoms=1);
+    matCaO->AddElement(Ca, natoms= 1);
+    G4Material* matMgO = new G4Material("MgO", density= 3.6*g/cm3, ncomponents=2);
+    matMgO->AddElement(O , natoms=1);
+    matMgO->AddElement(Mg, natoms= 1); 
+    G4Material* matP2O5 = new G4Material("P2O5", density= 2.39*g/cm3, ncomponents=2);
+    matP2O5->AddElement(O , natoms=5);
+    matP2O5->AddElement(P, natoms= 2);  
+
+    G4Material* matCoalM4 = new G4Material("CoalM4",density = 1.2*g/cm3,ncomponents=10);
+    matCoalM4->AddMaterial(matC,    fractionmass=76.89*perCent);
+    matCoalM4->AddMaterial(matSiO2, fractionmass=12.9*perCent);
+    matCoalM4->AddMaterial(matAl2O3,fractionmass=5.58*perCent);
+    matCoalM4->AddMaterial(matFe2O3,fractionmass=2.62*perCent);
+    matCoalM4->AddMaterial(matTiO2, fractionmass=0.13*perCent);
+    matCoalM4->AddMaterial(matK2O,  fractionmass=1.03*perCent);
+    matCoalM4->AddMaterial(matNa2O, fractionmass=0.16*perCent);
+    matCoalM4->AddMaterial(matCaO,  fractionmass=0.22*perCent);
+    matCoalM4->AddMaterial(matMgO,  fractionmass=0.4*perCent);
+    matCoalM4->AddMaterial(matP2O5, fractionmass=0.07*perCent);
+
+
 }
