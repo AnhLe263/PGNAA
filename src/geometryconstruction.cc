@@ -61,14 +61,36 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4VPhysicalVolume* worldPhys = new G4PVPlacement(0,G4ThreeVector(),"World",worldLogic,0,false,0,true);
 
     //outter Pb layer
-    G4double tubPhi = 360*deg;
+    G4double tubPhi = 180*deg;
     G4Tubs *leadSolid = new G4Tubs("Lead",0,outterRadiusPb,outterHeightPb*0.5,0*deg,tubPhi);
     G4LogicalVolume* leadLogic = new G4LogicalVolume(leadSolid,matLead,"Lead");
     G4RotationMatrix* rotLead = new G4RotationMatrix();
     rotLead->rotateX(90*deg);
     G4double posX = 0.*cm, posY = 0.*cm, posZ = 0*cm;
-    new G4PVPlacement(rotLead,G4ThreeVector(posX,posY,posZ),"Lead",leadLogic,worldPhys,false,0,true);
-
+    G4VPhysicalVolume* leadPhys =  new G4PVPlacement(rotLead,G4ThreeVector(posX,posY,posZ),"Lead",leadLogic,worldPhys,false,0,true);
+    /*---------------------------parafin------------------------------------------------------------------------------*/
+    // Chia phần parafin thành 2 phần nhỏ để implement cho dễ: Phần 1 chưa det và mẫu; Phần 2 chứa nguồn, graphite
+    //Phần parafin thứ nhất:
+    G4double outterRadiusParafin = 33.*cm/2.0 + 15*cm;
+    G4double innerRadiusParafin1 = 7.6*cm/2.;
+    G4double heighParafin1 = 10*cm + 25*cm;
+    G4Tubs* parafin1Solid = new G4Tubs("Parafin1",innerRadiusParafin1,outterRadiusParafin,heighParafin1*0.5,0*deg,tubPhi);
+    G4LogicalVolume* parafin1Logic = new G4LogicalVolume(parafin1Solid,matParafin,"Parafin");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = outterHeightPb/2. - 2.*cm - heighParafin1/2.0;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "Parafin",
+        parafin1Logic,
+        leadPhys,//mother
+        false,
+        0,
+        true
+    );
+    
+    /*---------------------------0000------------------------------------------------------------------------------*/
     return worldPhys;
 }
 
