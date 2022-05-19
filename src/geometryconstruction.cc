@@ -61,7 +61,8 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     
     G4double sourceCfThickness = 3.*cm;
     G4double sourceRadius = 2*cm;// Can hoi lai Chu Tuy
-    G4double heighParafin2 = 7*cm + 12*cm + sourceCfThickness +6*cm;
+    G4double graphiteThickness = 12.*cm;
+    G4double heighParafin2 = 7*cm + graphiteThickness + sourceCfThickness +6*cm;
     //Hinh tru Pb:
     G4double outterRadiusPb = outterRadiusParafin+3*cm;;
     G4double outterHeightPb = 67*cm;
@@ -152,6 +153,23 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         "Source",
         sourceLogic,
         sourceRegionPhys,//Mother
+        false,
+        0,
+        true
+    );
+    /*---------------------------0000------------------------------------------------------------------------------*/
+    //Graphite
+    G4Tubs *graphiteSolid = new G4Tubs("Graphite",0,outterRadiusSample,graphiteThickness*0.5,0,tubPhi);
+    G4LogicalVolume *graphiteLogic = new G4LogicalVolume(graphiteSolid,matGraphite,"Graphite");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = heighParafin1/2. - 10.*cm - heighSample - 6.0*cm - sourceCfThickness - graphiteThickness/2.;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "Graphite",
+        graphiteLogic,
+        parafinPhys,//Mother
         false,
         0,
         true
