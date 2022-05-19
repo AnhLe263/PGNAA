@@ -75,7 +75,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4VPhysicalVolume* worldPhys = new G4PVPlacement(0,G4ThreeVector(),"World",worldLogic,0,false,0,true);
 
     //outter Pb layer
-    G4double tubPhi = 180*deg;
+    G4double tubPhi = 230*deg;
     G4Tubs *leadSolid = new G4Tubs("Lead",0,outterRadiusPb,outterHeightPb*0.5,0*deg,tubPhi);
     G4LogicalVolume* leadLogic = new G4LogicalVolume(leadSolid,matLead,"Lead");
     G4RotationMatrix* rotLead = new G4RotationMatrix();
@@ -188,6 +188,24 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         "detHole",
         detHoleLogic,
         leadPhys,//Mother
+        false,
+        0,
+        true
+    );
+    // BGO
+    G4double diameterBGO = 2.0* 2.54*cm ; // 2inch
+    G4double heighBGO = 2.0* 2.54*cm ; // 2inch
+    G4Tubs *detSolid = new G4Tubs("BGO",0,diameterBGO*0.5,heighBGO*0.5,0,tubPhi);
+    G4LogicalVolume *detLogic = new G4LogicalVolume(detSolid,matBGO,"BGO");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = 14.*cm - heighDetHole/2.;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "BGO",
+        detLogic,
+        detHolePhys,//Mother
         false,
         0,
         true
