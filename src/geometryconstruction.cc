@@ -57,7 +57,8 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4double innerRadiusSample = outterRadiusDetHole;
     G4double outterRadiusParafin = outterRadiusSample+ 15.*cm;
     G4double innerRadiusParafin1 = outterRadiusDetHole;
-    G4double heighParafin1 = 10*cm + 25*cm;
+    G4double heighParafin1 = 10*cm + heighSample;
+    G4double heighDetHole = heighParafin1 + 2.*cm;
     
     G4double sourceCfThickness = 3.*cm;
     G4double sourceRadius = 2*cm;// Can hoi lai Chu Tuy
@@ -170,6 +171,23 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         "Graphite",
         graphiteLogic,
         parafinPhys,//Mother
+        false,
+        0,
+        true
+    );
+    /*---------------------------0000------------------------------------------------------------------------------*/
+    // Det Hole
+    G4Tubs *detHoleSolid = new G4Tubs("detHole",0,outterRadiusDetHole,heighDetHole*0.5,0,tubPhi);
+    G4LogicalVolume *detHoleLogic = new G4LogicalVolume(detHoleSolid,matAir,"detHole");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = outterHeightPb/2. - heighDetHole/2.;
+    G4VPhysicalVolume* detHolePhys = new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "detHole",
+        detHoleLogic,
+        leadPhys,//Mother
         false,
         0,
         true

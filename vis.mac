@@ -34,9 +34,10 @@
 /vis/geometry/set/colour Lead 0 0 0 0 0.5
 /vis/geometry/set/colour Parafin 1 0 1 0 0.2
 /vis/geometry/set/colour Sample 0 0 0 1 1
-/vis/geometry/set/colour SourceRegion 1 1 1 1 0.5
+/vis/geometry/set/colour SourceRegion 1 1 1 1 0.3
 /vis/geometry/set/colour Source 0 1 0 0 0.5
 /vis/geometry/set/colour Graphite 0.2 1 0.7 0.5 1
+/vis/geometry/set/colour detHole 1 1 1 1 0.3
 
 /vis/viewer/set/background white
 #/vis/set/colour 0 0 0 0
