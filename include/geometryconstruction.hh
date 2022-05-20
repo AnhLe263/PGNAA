@@ -13,6 +13,7 @@ class geometryconstruction: public G4VUserDetectorConstruction
     geometryconstruction();
     ~geometryconstruction() override;
     G4VPhysicalVolume* Construct() override;
+    void ConstructSDandField() override;
     void ChooseOldGeometry();
     private:
     G4bool fUsingNewGeometry;// Dung cau hinh moi

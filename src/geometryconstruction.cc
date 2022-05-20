@@ -22,6 +22,10 @@
 #include "G4Cons.hh"
 #include "G4Transform3D.hh"
 #include "G4MultiUnion.hh"
+#include "G4MultiFunctionalDetector.hh"
+#include "G4VPrimitiveScorer.hh"
+#include "G4SDManager.hh"
+#include "G4PSEnergyDeposit.hh"
 geometryconstruction::geometryconstruction()
 : G4VUserDetectorConstruction(), fUsingNewGeometry(false)
 {
@@ -295,6 +299,15 @@ void geometryconstruction::ChooseOldGeometry()
 {
     fUsingNewGeometry = false;
     G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
+void geometryconstruction::ConstructSDandField()
+{
+    G4MultiFunctionalDetector *BGODet = new G4MultiFunctionalDetector("BGOdet");
+    G4SDManager::GetSDMpointer()->AddNewDetector(BGODet);
+    G4VPrimitiveScorer *primitive1 = new G4PSEnergyDeposit("edep");
+    BGODet->RegisterPrimitive(primitive1);
+    SetSensitiveDetector("BGO",BGODet);
 }
 
 void geometryconstruction::DefineMaterials()
