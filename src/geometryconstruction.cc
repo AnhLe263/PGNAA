@@ -19,6 +19,9 @@
 #include "G4RotationMatrix.hh"
 #include "G4Box.hh"
 #include "G4UnionSolid.hh"
+#include "G4Cons.hh"
+#include "G4Transform3D.hh"
+#include "G4MultiUnion.hh"
 geometryconstruction::geometryconstruction()
 : G4VUserDetectorConstruction(), fUsingNewGeometry(false)
 {
@@ -210,6 +213,75 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         0,
         true
     );
+
+    // Chop o dau det: cons shape
+    G4double consHeigh = 8.*cm;// Hoi lai chu Tuy
+    G4double pRmax2 = outterRadiusDetHole;
+    G4double pRmin2 = 0;
+    G4double pRmax1 = 0;
+    G4double pRmin1 = 0;
+    G4double pShi = 0*deg;
+    //G4double pDPhi = 360*deg;
+    G4Cons *PEConsSolid = new G4Cons("PEcons",pRmin1,pRmax1,pRmin2,pRmax2,consHeigh*0.5,pShi,tubPhi);
+    // Vo det: det cover
+    G4double outterRTubsPE = outterRadiusDetHole;
+    G4double TubsPEThickness = 3.*mm; //Hoi lai Chu Tuy
+    G4double TubsPEHeight = heighDetHole - consHeigh;
+    G4Tubs* TubsPESolid = new G4Tubs("TubsPE",outterRTubsPE-TubsPEThickness,outterRTubsPE,TubsPEHeight*0.5,0*deg,tubPhi);
+    
+    // TubsPE + PEcons 
+    zTran = -(TubsPEHeight/2. + consHeigh/2.);
+    G4UnionSolid* TubsConsPE = new G4UnionSolid("TubsConsPE",TubsPESolid,PEConsSolid,0,G4ThreeVector(0,0,zTran));
+    G4LogicalVolume* TubsConsPELogic = new G4LogicalVolume(TubsConsPE,matPOLYETHYLENE,"PELayer");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = heighDetHole/2. - TubsPEHeight/2.;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "PELayer",
+        TubsConsPELogic,
+        detHolePhys,//Mother
+        false,
+        0,
+        true
+    );
+    // Lop Pb nho ngay truoc BGO
+    G4double smallPbThickness = 2*cm;
+    G4double outerRSmallPb = outterRadiusDetHole - TubsPEThickness;
+    G4Tubs *SmallPbSolid = new G4Tubs("SmallPb",0,outerRSmallPb,smallPbThickness*0.5,0*deg,tubPhi);
+    G4LogicalVolume* SmallPbLogic  = new G4LogicalVolume(SmallPbSolid,matLead,"PbLayer2");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = 14.*cm - heighDetHole/2. - heighBGO/2. - smallPbThickness/2.;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "PbLayer2",
+        SmallPbLogic,
+        detHolePhys,//Mother
+        false,
+        0,
+        true
+    );
+    // Phan PE giua cone va Pb nho trong det
+    G4double outerRSmallPE = outterRadiusDetHole - TubsPEThickness;
+    G4double SmallePEThickness = 14*cm - consHeigh - heighBGO/2. - smallPbThickness; 
+    G4Tubs *SmallPESolid = new G4Tubs("SmallTubsPE",0,outerRSmallPE,SmallePEThickness*0.5,0*deg,tubPhi);
+    G4LogicalVolume* SmallPELogic  = new G4LogicalVolume(SmallPESolid,matPOLYETHYLENE,"PELayer2");
+    posX = 0*cm;
+    posY = 0.*cm;
+    posZ = heighDetHole/2. - consHeigh - SmallePEThickness/2.;
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,-posZ),
+        "PELayer2",
+        SmallPELogic,
+        detHolePhys,//Mother
+        false,
+        0,
+        true
+    ); 
     /*---------------------------0000------------------------------------------------------------------------------*/
     return worldPhys;
 }

@@ -39,6 +39,9 @@
 /vis/geometry/set/colour Graphite 0.2 1 0.7 0.5 1
 /vis/geometry/set/colour detHole 1 1 1 1 0.3
 /vis/geometry/set/colour BGO 1 1 1 0 1
+/vis/geometry/set/colour PELayer 1 0.8 0.3 0.6 1
+/vis/geometry/set/colour PELayer2 1 0.8 0.3 0.6 1
+/vis/geometry/set/colour PbLayer2 0 0 0 0 0.5
 
 /vis/viewer/set/background white
 #/vis/set/colour 0 0 0 0
