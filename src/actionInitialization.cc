@@ -6,6 +6,7 @@
 #include "geometryconstruction.hh"
 #include "source.hh"
 #include "RunAction.hh"
+#include "EventAction.hh"
 actionInitialization::actionInitialization(geometryconstruction* geo)
 : G4VUserActionInitialization(), fGeometry(geo)
 {
@@ -27,4 +28,5 @@ void actionInitialization::Build() const
     source* fSource = new source(fGeometry);
     SetUserAction(fSource);
     SetUserAction(new RunAction());
+    SetUserAction(new EventAction());
 }
