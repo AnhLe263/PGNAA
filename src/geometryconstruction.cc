@@ -82,7 +82,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4VPhysicalVolume* worldPhys = new G4PVPlacement(0,G4ThreeVector(),"World",worldLogic,0,false,0,true);
 
     //outter Pb layer
-    G4double tubPhi = 230*deg;
+    G4double tubPhi = 360*deg;
     G4Tubs *leadSolid = new G4Tubs("Lead",0,outterRadiusPb,outterHeightPb*0.5,0*deg,tubPhi);
     G4LogicalVolume* leadLogic = new G4LogicalVolume(leadSolid,matLead,"Lead");
     G4RotationMatrix* rotLead = new G4RotationMatrix();
