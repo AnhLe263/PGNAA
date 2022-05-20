@@ -87,7 +87,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4VPhysicalVolume* leadPhys =  new G4PVPlacement(rotLead,G4ThreeVector(posX,posY,posZ),"Lead",leadLogic,worldPhys,false,0,true);
     /*---------------------------parafin------------------------------------------------------------------------------*/
     // Chia phần parafin thành 2 phần nhỏ để implement cho dễ: Phần 1 chưa det và mẫu; Phần 2 chứa nguồn, graphite
-    //Phần parafin thứ nhất:
+    
     
     G4Tubs* parafin1Solid = new G4Tubs("Parafin1",innerRadiusParafin1,outterRadiusParafin,heighParafin1*0.5,0*deg,tubPhi);
     G4Tubs* parafin2Solid = new G4Tubs("Parafin2",0,outterRadiusParafin,heighParafin2*0.5,0*deg,tubPhi);
