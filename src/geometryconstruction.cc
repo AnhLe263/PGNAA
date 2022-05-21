@@ -89,6 +89,11 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     rotLead->rotateX(90*deg);
     G4double posX = 0.*cm, posY = 0.*cm, posZ = 0*cm;
     G4VPhysicalVolume* leadPhys =  new G4PVPlacement(rotLead,G4ThreeVector(posX,posY,posZ),"Lead",leadLogic,worldPhys,false,0,true);
+    // Tinh toa do nguon so vo global co-ordinate (World);
+    posX = 0*cm;
+    posZ = 0*cm; //Do Lead quay 90 do , nen Z->Y va Y->Z
+    posY = outterHeightPb/2. - 2.*cm - heighParafin1 - 6.*cm -sourceCfThickness/2.;
+    fSourceCenterPosition = G4ThreeVector(posX,posY,posZ);
     /*---------------------------parafin------------------------------------------------------------------------------*/
     // Chia phần parafin thành 2 phần nhỏ để implement cho dễ: Phần 1 chưa det và mẫu; Phần 2 chứa nguồn, graphite
     
@@ -165,6 +170,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         0,
         true
     );
+    
     /*---------------------------0000------------------------------------------------------------------------------*/
     //Graphite
     G4Tubs *graphiteSolid = new G4Tubs("Graphite",0,outterRadiusSample,graphiteThickness*0.5,0,tubPhi);
