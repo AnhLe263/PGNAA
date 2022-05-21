@@ -5,6 +5,7 @@
 #include <iostream>
 #include "geometryconstruction.hh"
 #include "actionInitialization.hh"
+#include "physicslist.hh"
 
 #include "QGSP_BIC.hh"
 #include "G4RunManagerFactory.hh"
@@ -23,7 +24,8 @@ int main(int argc, char** argv)
     //set mandatory initialization classes
     geometryconstruction* geo = new geometryconstruction();
     runManager->SetUserInitialization(geo);
-    runManager->SetUserInitialization(new QGSP_BIC());
+    //runManager->SetUserInitialization(new QGSP_BIC());
+    runManager->SetUserInitialization(new physicslist());
     runManager->SetUserInitialization(new actionInitialization(geo));
 
     //initialize visualization

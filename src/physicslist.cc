@@ -26,3 +26,7 @@ physicslist::physicslist(/* args */)
     //RegisterPhysics(new G4RadioactiveDecayPhysics());
     RegisterPhysics(new RadioactiveDecayPhysics());
 }
+
+physicslist::~physicslist()
+{
+}
