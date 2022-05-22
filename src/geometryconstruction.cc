@@ -4,6 +4,7 @@
 // Contribution: L.T. Anh, D.M. Linh                                   //
 //---------------------------------------------------------------------//
 #include "geometryconstruction.hh"
+#include "geometryMessenger.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
@@ -26,10 +27,13 @@
 #include "G4VPrimitiveScorer.hh"
 #include "G4SDManager.hh"
 #include "G4PSEnergyDeposit.hh"
+
 geometryconstruction::geometryconstruction()
 : G4VUserDetectorConstruction(), fUsingNewGeometry(false)
 {
+    fgeometryMessenger = new geometryMessenger(this);
     DefineMaterials();
+    fSampleMaterial = G4NistManager::Instance()->FindOrBuildMaterial("CoalM4");
 }
 
 geometryconstruction::~geometryconstruction()
@@ -118,10 +122,10 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         true
     );
     // Sample
-    G4Material *matSample = nist->FindOrBuildMaterial("CoalM4");
+    
     
     G4Tubs *sampleSolid = new G4Tubs("Sample",innerRadiusSample,outterRadiusSample,heighSample*0.5,0*deg,tubPhi);
-    G4LogicalVolume *sampleLogic = new G4LogicalVolume(sampleSolid,matSample,"Sample");
+    fLogicSample = new G4LogicalVolume(sampleSolid,fSampleMaterial,"Sample");
     posX = 0*cm;
     posY = 0.*cm;
     posZ = heighParafin1/2. - 10.*cm - heighSample/2.0;
@@ -129,7 +133,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         0,
         G4ThreeVector(posX,posY,posZ),
         "Sample",
-        sampleLogic,
+        fLogicSample,
         parafinPhys,//Mother
         false,
         0,
@@ -293,6 +297,8 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         true
     ); 
     /*---------------------------0000------------------------------------------------------------------------------*/
+    // Print materials
+    G4cout << *(G4Material::GetMaterialTable()) << G4endl;
     return worldPhys;
 }
 
@@ -391,4 +397,28 @@ void geometryconstruction::DefineMaterials()
     matCoalM4->AddMaterial(matP2O5, fractionmass=0.07*perCent);
     
 
+    
+}
+
+void geometryconstruction::SetSampleMaterial(G4String materialName)
+{
+  G4NistManager* nistManager = G4NistManager::Instance();
+
+  G4Material* pttoMaterial =
+              nistManager->FindOrBuildMaterial(materialName);
+
+  if (fSampleMaterial != pttoMaterial) {
+     if ( pttoMaterial ) {
+        fSampleMaterial = pttoMaterial;
+        if (fLogicSample) fLogicSample->SetMaterial(fSampleMaterial);
+        G4cout
+          << G4endl
+          << "----> The target is made of " << materialName << G4endl;
+     } else {
+        G4cout
+          << G4endl
+          << "-->  WARNING from SetTargetMaterial : "
+          << materialName << " not found" << G4endl;
+     }
+  }
 }
