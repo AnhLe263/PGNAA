@@ -158,9 +158,10 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
         true
     );
     // The tinh nguon
-    G4Material* matCf = nist->FindOrBuildMaterial("G4_Cf");
+    //G4Material* matSource = nist->FindOrBuildMaterial("G4_Cf");
+    G4Material* matSource = nist->FindOrBuildMaterial("G4_Fe");
     G4Tubs *sourceSolid = new G4Tubs("Source",0,sourceRadius,sourceCfThickness*0.5,0,tubPhi);
-    G4LogicalVolume *sourceLogic = new G4LogicalVolume(sourceSolid,matCf,"Source");
+    G4LogicalVolume *sourceLogic = new G4LogicalVolume(sourceSolid,matSource,"Source");
     posX = 0*cm;
     posY = 0.*cm;
     posZ = 0;
