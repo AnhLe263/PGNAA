@@ -2,12 +2,13 @@
 #
 # set target and chamber material
 #
-/PGNAA/geo/setSampleMaterial G4_C
+#/PGNAA/geo/setSampleMaterial G4_C
 #/PGNAA/geo/setSampleMaterial G4_Fe
 #/PGNAA/geo/setSampleMaterial G4_Si
-#/PGNAA/geo/setSampleMaterial CoalM4
+/PGNAA/geo/setSampleMaterial CoalM4
 #
 # End set target and chamber material
 #
+#/PGNAA/source/sourceType 1
 /run/printProgress 100000
 /run/beamOn 1000000
