@@ -304,12 +304,49 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
 
 G4VPhysicalVolume* geometryconstruction::ConstructNewGeo()
 {
+    auto nist = G4NistManager::Instance();
+    G4Material *matParafin = nist->FindOrBuildMaterial("G4_PARAFFIN");
+    G4Material *matLead = nist->FindOrBuildMaterial("G4_Pb");
+    G4Material *matGraphite = nist->FindOrBuildMaterial("G4_GRAPHITE");
+    G4Material *matPOLYETHYLENE = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
+    G4Material *matAir = nist->FindOrBuildMaterial("Air");
+    G4Material *matBGO = nist->FindOrBuildMaterial("BGO");
 
+    // Lam tam
+    // The World
+    //G4double outterRadiusWorld = outterRadiusPb*1.2;
+    G4double outterHeightWorld = 10*cm;
+    G4Box *worldSolid = new G4Box("World",outterHeightWorld*0.5,outterHeightWorld*0.5,outterHeightWorld*0.5);
+    G4LogicalVolume *worldLogic = new G4LogicalVolume(worldSolid,matAir,"World");
+    G4VPhysicalVolume* worldPhys = new G4PVPlacement(0,G4ThreeVector(),"World",worldLogic,0,false,0,true);
+    // BGO
+    G4double posX = 0.*cm, posY = 0.*cm, posZ = 0*cm;
+    //fSourceCenterPosition = G4ThreeVector(0,0,-3*cm);
+    G4double diameterBGO = 2.0* 2.54*cm ; // 2inch
+    G4double heighBGO = 2.0* 2.54*cm ; // 2inch
+    G4Tubs *detSolid = new G4Tubs("BGO",0,diameterBGO*0.5,heighBGO*0.5,0,360*deg);
+    G4LogicalVolume *detLogic = new G4LogicalVolume(detSolid,matBGO,"BGO");
+
+    new G4PVPlacement(
+        0,
+        G4ThreeVector(posX,posY,posZ),
+        "BGO",
+        detLogic,
+        worldPhys,//Mother
+        false,
+        0,
+        true
+    );
+
+    return worldPhys;
 }
 
 void geometryconstruction::ChooseOldGeometry()
 {
     fUsingNewGeometry = false;
+    G4cout
+          << G4endl
+          << "----> Choosing old Geometry " << G4endl;
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 

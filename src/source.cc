@@ -46,7 +46,7 @@ void source::GeneratePrimaries(G4Event* evt)
     }  else {
         fParticleGun->SetParticleEnergy(5*MeV);//Tam thoi dat vay, sau nay implment watt distribution
     }
-    auto phyVol = G4PhysicalVolumeStore::GetInstance()->GetVolume("Source");
+    //auto phyVol = G4PhysicalVolumeStore::GetInstance()->GetVolume("Source");
     auto pos = fGeometry->GetSourceCenterPosition();
     //G4cout<<pos.x()<<"\t"<<pos.y()<<"\t"<<pos.z()<<G4endl;
     G4double x = 0*cm;

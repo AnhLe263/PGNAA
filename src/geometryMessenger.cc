@@ -5,6 +5,7 @@
 #include "geometryMessenger.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithABool.hh"
 #include "geometryconstruction.hh"
 
 
@@ -21,6 +22,11 @@ geometryMessenger::geometryMessenger(geometryconstruction* geo)
     fSampleMaterialCmd->SetGuidance("Select Material of the Target.");
     fSampleMaterialCmd->SetParameterName("choice",false);
     fSampleMaterialCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+    
+    fChooseOldGeometryCmd = new G4UIcmdWithABool("/PGNAA/geo/chooseOldGeo",this);
+    fChooseOldGeometryCmd->SetParameterName("OldGeo",false);
+    fChooseOldGeometryCmd->SetDefaultValue(false);
+    fChooseOldGeometryCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 }
 
 geometryMessenger::~geometryMessenger()
@@ -34,5 +40,10 @@ void geometryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
     if (command == fSampleMaterialCmd) {
         fgeometryconstruction->SetSampleMaterial(newValue);
+    }
+    if (command == fChooseOldGeometryCmd) {
+        if (fChooseOldGeometryCmd->GetNewBoolValue(newValue) == true) {
+            fgeometryconstruction->ChooseOldGeometry();
+        }
     }
 }

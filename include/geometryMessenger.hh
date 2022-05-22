@@ -9,6 +9,7 @@
 class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithABool;
 class geometryconstruction;
 class geometryMessenger: public G4UImessenger
 {
@@ -25,4 +26,5 @@ class geometryMessenger: public G4UImessenger
     G4UIdirectory*         fDetDirectory = nullptr;
 
     G4UIcmdWithAString*    fSampleMaterialCmd = nullptr;
+    G4UIcmdWithABool* fChooseOldGeometryCmd = nullptr;
 };
