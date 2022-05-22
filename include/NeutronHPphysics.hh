@@ -47,7 +47,7 @@ class NeutronHPphysics : public G4VPhysicsConstructor
    ~NeutronHPphysics();
 
   public:
-    void ConstructParticle() override { };
+    void ConstructParticle() override;
     void ConstructProcess() override;
     
   private:
