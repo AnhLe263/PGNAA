@@ -15,6 +15,6 @@ class source : public G4VUserPrimaryGeneratorAction
     ~source();
     void GeneratePrimaries(G4Event*) override;
     private:
-    G4ParticleGun* fParticelGun;
+    G4ParticleGun* fParticleGun;
     geometryconstruction* fGeometry;
 };
