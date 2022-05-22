@@ -7,7 +7,7 @@
 #include "G4IonElasticPhysics.hh"
 #include "G4HadronPhysicsQGSP_BIC_HP.hh"
 #include "G4HadronPhysicsQGSP_BIC_AllHP.hh"
-#include "NeutronHPphysics.hh"
+#include "NeutronHPphysics.hh" //take from hadr04 example
 
 physicslist::physicslist(/* args */)
 : G4VModularPhysicsList()
