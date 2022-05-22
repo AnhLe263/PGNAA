@@ -6,11 +6,16 @@
 #include "G4IonPhysicsXS.hh"
 #include "G4IonElasticPhysics.hh"
 #include "G4HadronPhysicsQGSP_BIC_HP.hh"
+#include "G4HadronPhysicsQGSP_BIC_AllHP.hh"
+#include "NeutronHPphysics.hh"
+
 physicslist::physicslist(/* args */)
 : G4VModularPhysicsList()
 {
-    // Hadron Inelastic physics, and also elastic process provied by G4NeutronHPBuilder in G4HadronPhysicsQGSP_BIC_HP
-     RegisterPhysics( new G4HadronPhysicsQGSP_BIC_HP());
+    // Hadron Inelastic physics; Check elastic process provied by G4NeutronHPBuilder in G4HadronPhysicsQGSP_BIC_HP???
+    //RegisterPhysics( new G4HadronPhysicsQGSP_BIC_HP());
+    //RegisterPhysics( new G4HadronPhysicsQGSP_BIC_AllHP());
+    RegisterPhysics(new NeutronHPphysics());
     ////RegisterPhysics( new G4HadronInelasticQBBC());        
     ////RegisterPhysics( new G4HadronPhysicsINCLXX());
     ////RegisterPhysics( new G4HadronPhysicsFTFP_BERT_HP());
