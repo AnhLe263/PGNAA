@@ -9,7 +9,7 @@
 physicslist::physicslist(/* args */)
 : G4VModularPhysicsList()
 {
-    // Hadron Inelastic physics
+    // Hadron Inelastic physics, and also elastic process provied by G4NeutronHPBuilder in G4HadronPhysicsQGSP_BIC_HP
      RegisterPhysics( new G4HadronPhysicsQGSP_BIC_HP());
     ////RegisterPhysics( new G4HadronInelasticQBBC());        
     ////RegisterPhysics( new G4HadronPhysicsINCLXX());
