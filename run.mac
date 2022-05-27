@@ -1,4 +1,6 @@
 /run/initialize
+
+/process/had/particle_hp/skip_missing_isotopes true
 #
 # set target and chamber material
 #
