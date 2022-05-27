@@ -1,5 +1,5 @@
 /run/initialize
-
+/PGNAA/source/sourceType 1
 /process/had/particle_hp/skip_missing_isotopes true
 #
 # set target and chamber material
@@ -11,6 +11,6 @@
 #
 # End set target and chamber material
 #
-#/PGNAA/source/sourceType 1
+
 /run/printProgress 100000
 /run/beamOn 1000000

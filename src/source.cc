@@ -17,11 +17,11 @@
 #include "G4AnalysisManager.hh"
 
 source::source(geometryconstruction* det)
-: G4VUserPrimaryGeneratorAction(),fParticleGun(nullptr),fGeometry(det), fUsingDirectNeutronBeam(true)
+: G4VUserPrimaryGeneratorAction(),fParticleGun(nullptr),fGeometry(det), fUsingDirectNeutronBeam(false)
 {
     fsourceMessenger = new sourceMessenger(this);
     fParticleGun = new G4ParticleGun(1);
-    G4ParticleDefinition* partDef = G4ParticleTable::GetParticleTable()->FindParticle("geantino");
+    G4ParticleDefinition* partDef = G4ParticleTable::GetParticleTable()->FindParticle("neutron");
     fParticleGun->SetParticleDefinition(partDef);
     fParticleGun->SetParticleEnergy(2.0*MeV);
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,1,0));
@@ -36,18 +36,17 @@ source::~source()
 
 void source::GeneratePrimaries(G4Event* evt)
 {
-    if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {  
+    if (!fUsingDirectNeutronBeam) {  
         G4int Z = 98, A = 252;
         G4double ionCharge   = 0.*eplus;
         G4double excitEnergy = 0.*keV;
         G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
         fParticleGun->SetParticleDefinition(ion);
         fParticleGun->SetParticleCharge(ionCharge);
-        G4cout
-          << G4endl
-          << "----> By default, The neutron source: spontaneous fission Cf-252"<< G4endl;
+        G4cout<< "----> By default, The neutron source: spontaneous fission Cf-252"<< G4endl;
     }  else {
         fParticleGun->SetParticleEnergy(5*MeV);//Tam thoi dat vay, sau nay implment watt distribution
+        //G4cout<< "----> The newtron source: Using direct neutron spectra "<< G4endl;
     }
     //auto phyVol = G4PhysicalVolumeStore::GetInstance()->GetVolume("Source");
     auto pos = fGeometry->GetSourceCenterPosition();
