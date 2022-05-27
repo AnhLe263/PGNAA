@@ -21,7 +21,7 @@ source::source(geometryconstruction* det)
 {
     fsourceMessenger = new sourceMessenger(this);
     fParticleGun = new G4ParticleGun(1);
-    G4ParticleDefinition* partDef = G4ParticleTable::GetParticleTable()->FindParticle("neutron");
+    G4ParticleDefinition* partDef = G4ParticleTable::GetParticleTable()->FindParticle("geantino");
     fParticleGun->SetParticleDefinition(partDef);
     fParticleGun->SetParticleEnergy(2.0*MeV);
     fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,1,0));
@@ -36,13 +36,16 @@ source::~source()
 
 void source::GeneratePrimaries(G4Event* evt)
 {
-    if (!fUsingDirectNeutronBeam) {  
+    if (fParticleGun->GetParticleDefinition() == G4Geantino::Geantino()) {  
         G4int Z = 98, A = 252;
         G4double ionCharge   = 0.*eplus;
         G4double excitEnergy = 0.*keV;
         G4ParticleDefinition* ion = G4IonTable::GetIonTable()->GetIon(Z,A,excitEnergy);
         fParticleGun->SetParticleDefinition(ion);
         fParticleGun->SetParticleCharge(ionCharge);
+        G4cout
+          << G4endl
+          << "----> By default, The newtron source: spontaneous fission Cf-252 (3.09%); ~97% alpha decay to Cm-248 "<< G4endl;
     }  else {
         fParticleGun->SetParticleEnergy(5*MeV);//Tam thoi dat vay, sau nay implment watt distribution
     }
