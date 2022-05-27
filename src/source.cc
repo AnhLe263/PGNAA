@@ -17,7 +17,7 @@
 #include "G4AnalysisManager.hh"
 
 source::source(geometryconstruction* det)
-: G4VUserPrimaryGeneratorAction(),fParticleGun(nullptr),fGeometry(det)
+: G4VUserPrimaryGeneratorAction(),fParticleGun(nullptr),fGeometry(det), fUsingDirectNeutronBeam(true)
 {
     fsourceMessenger = new sourceMessenger(this);
     fParticleGun = new G4ParticleGun(1);
