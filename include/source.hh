@@ -28,7 +28,7 @@ inline void source::ChoosingTypeOfSource(G4int i)
         fUsingDirectNeutronBeam = false;// Dung decay source Cf-252
         G4cout
           << G4endl
-          << "----> The newtron source: spontaneous fission Cf-252 (3.09%); ~97% alpha decay to Cm-248 "<< G4endl;
+          << "----> The neutron source: spontaneous fission Cf-252 "<< G4endl;
     }
     else {
         fUsingDirectNeutronBeam = true;// Dung nguon histogram neutron, ko co decay

@@ -45,7 +45,7 @@ void source::GeneratePrimaries(G4Event* evt)
         fParticleGun->SetParticleCharge(ionCharge);
         G4cout
           << G4endl
-          << "----> By default, The newtron source: spontaneous fission Cf-252 (3.09%); ~97% alpha decay to Cm-248 "<< G4endl;
+          << "----> By default, The neutron source: spontaneous fission Cf-252"<< G4endl;
     }  else {
         fParticleGun->SetParticleEnergy(5*MeV);//Tam thoi dat vay, sau nay implment watt distribution
     }
