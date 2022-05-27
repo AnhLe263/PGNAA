@@ -71,10 +71,11 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4double heighParafin1 = 10*cm + heighSample;
     G4double heighDetHole = heighParafin1 + 2.*cm;
     
-    G4double sourceCfThickness = 3.*cm;
-    G4double sourceRadius = 2*cm;// Can hoi lai Chu Tuy
+    G4double sourceHoleCfThickness = 3.*cm;
+    G4double sourceCfThickness = 2*cm;
+    G4double sourceRadius = 1*cm;// Can hoi lai Chu Tuy
     G4double graphiteThickness = 12.*cm;
-    G4double heighParafin2 = 7*cm + graphiteThickness + sourceCfThickness +6*cm;
+    G4double heighParafin2 = 7*cm + graphiteThickness + sourceHoleCfThickness +6*cm;
     //Hinh tru Pb:
     G4double outterRadiusPb = outterRadiusParafin+3*cm;;
     G4double outterHeightPb = 67*cm;
@@ -96,7 +97,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     // Tinh toa do nguon so vo global co-ordinate (World);
     posX = 0*cm;
     posZ = 0*cm; //Do Lead quay 90 do , nen Z->Y va Y->Z
-    posY = outterHeightPb/2. - 2.*cm - heighParafin1 - 6.*cm -sourceCfThickness/2.;
+    posY = outterHeightPb/2. - 2.*cm - heighParafin1 - 6.*cm -sourceHoleCfThickness/2.-sourceCfThickness/2.;
     fSourceCenterPosition = G4ThreeVector(posX,posY,posZ);
     /*---------------------------parafin------------------------------------------------------------------------------*/
     // Chia phần parafin thành 2 phần nhỏ để implement cho dễ: Phần 1 chưa det và mẫu; Phần 2 chứa nguồn, graphite
@@ -142,11 +143,11 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
 
     /*---------------------------0000------------------------------------------------------------------------------*/
     // The vung khong gian nguon
-    G4Tubs *sourceRegionSolid = new G4Tubs("SourceRegion",0,outterRadiusSample,sourceCfThickness*0.5,0,tubPhi);
+    G4Tubs *sourceRegionSolid = new G4Tubs("SourceRegion",0,outterRadiusSample,sourceHoleCfThickness*0.5,0,tubPhi);
     G4LogicalVolume *sourceRegionLogic = new G4LogicalVolume(sourceRegionSolid,matAir,"SourceRegion");
     posX = 0*cm;
     posY = 0.*cm;
-    posZ = heighParafin1/2. - 10.*cm - heighSample - 6.0*cm - sourceCfThickness/2.;
+    posZ = heighParafin1/2. - 10.*cm - heighSample - 6.0*cm - sourceHoleCfThickness/2.;
     G4VPhysicalVolume* sourceRegionPhys = new G4PVPlacement(
         0,
         G4ThreeVector(posX,posY,posZ),
@@ -159,12 +160,12 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     );
     // The tinh nguon
     //G4Material* matSource = nist->FindOrBuildMaterial("G4_Cf");
-    G4Material* matSource = nist->FindOrBuildMaterial("G4_Fe");
+    G4Material* matSource = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
     G4Tubs *sourceSolid = new G4Tubs("Source",0,sourceRadius,sourceCfThickness*0.5,0,tubPhi);
     G4LogicalVolume *sourceLogic = new G4LogicalVolume(sourceSolid,matSource,"Source");
     posX = 0*cm;
     posY = 0.*cm;
-    posZ = 0;
+    posZ = -sourceHoleCfThickness/2.+sourceCfThickness/2.;
     new G4PVPlacement(
         0,
         G4ThreeVector(posX,posY,posZ),
@@ -182,7 +183,7 @@ G4VPhysicalVolume* geometryconstruction::ConstructOldGeo()
     G4LogicalVolume *graphiteLogic = new G4LogicalVolume(graphiteSolid,matGraphite,"Graphite");
     posX = 0*cm;
     posY = 0.*cm;
-    posZ = heighParafin1/2. - 10.*cm - heighSample - 6.0*cm - sourceCfThickness - graphiteThickness/2.;
+    posZ = heighParafin1/2. - 10.*cm - heighSample - 6.0*cm - sourceHoleCfThickness - graphiteThickness/2.;
     new G4PVPlacement(
         0,
         G4ThreeVector(posX,posY,posZ),
